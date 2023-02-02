@@ -1,8 +1,9 @@
 // Controlador generado para controlar las rutas de Cars, son los encargados de escuchar la solicitud y emitir una respuesta.
 
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, ParseUUIDPipe } from '@nestjs/common';
 import { Body, Delete, Patch, Post } from '@nestjs/common/decorators';
 import { CarsService } from './cars.service';
+import { CreateCarDto } from './dto/create-car.dto';
 
 @Controller('cars')
 export class CarsController {
@@ -22,16 +23,16 @@ export class CarsController {
 
     // método para obtener un Car por Id
     @Get(':id')
-    getCarById(@Param('id', ParseIntPipe) id: number) {
+    getCarById(@Param('id', ParseUUIDPipe) id: string) {
 
         return this.carsService.findOneById(id);
     }
 
     // método para agregar un Car
     @Post()
-    createCar(@Body() body: any) {
+    createCar(@Body() createCarDto: CreateCarDto) {
         
-        return body;
+        return createCarDto;
     }
 
     // método para actualizar un Car por Id
