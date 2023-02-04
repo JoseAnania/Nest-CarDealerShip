@@ -1,11 +1,13 @@
 // Controlador generado para controlar las rutas de Cars, son los encargados de escuchar la solicitud y emitir una respuesta.
 
-import { Controller, Get, Param, ParseIntPipe, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, ParseUUIDPipe, ValidationPipe } from '@nestjs/common';
 import { Body, Delete, Patch, Post } from '@nestjs/common/decorators';
 import { CarsService } from './cars.service';
 import { CreateCarDto } from './dto/create-car.dto';
+import { UpdateCarDto } from './dto/update-car.dto';
 
 @Controller('cars')
+
 export class CarsController {
 
     constructor(
@@ -32,23 +34,20 @@ export class CarsController {
     @Post()
     createCar(@Body() createCarDto: CreateCarDto) {
         
-        return createCarDto;
+        return this.carsService.create(createCarDto);
     }
 
     // método para actualizar un Car por Id
     @Patch(':id')
-    updateCar(@Param('id', ParseIntPipe) id: number, @Body() body: any) {
+    updateCar(@Param('id', ParseUUIDPipe) id: string, @Body() updateCarDto: UpdateCarDto) {
         
-        return body;
+        return this.carsService.update(id, updateCarDto);
     }
 
     // método para eliminar un Car por Id
     @Delete(':id')
-    deleteCar(@Param('id', ParseIntPipe) id: number) {
+    deleteCar(@Param('id', ParseUUIDPipe) id: string) {
         
-        return {
-            id,
-            method: 'Delete'
-        }
+        return this.carsService.delete(id);
     }
 }

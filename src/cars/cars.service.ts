@@ -3,6 +3,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Car } from './interfaces/car.interface';
 import { v4 as uuid } from "uuid";
+import { CreateCarDto } from './dto/create-car.dto';
+import { UpdateCarDto } from './dto/update-car.dto';
+import { Delete } from '@nestjs/common/decorators';
 
 @Injectable()
 export class CarsService {
@@ -44,5 +47,61 @@ export class CarsService {
             throw new NotFoundException(`Car whit id '${id}' not found`);
 
         return car;
+    }
+
+    // método para crear un Car
+    public create(createCarDto: CreateCarDto) {
+        
+        // creamos una constante con la data del nuevo Car
+        const car: Car = {
+            id: uuid(),
+            model: createCarDto.brand,
+            brand: createCarDto.model
+        }
+
+        // agregamos el nuevo Car 
+        this.cars.push(car);
+
+        return car;
+    }
+
+    // método para actualizar un Car
+    public update(id: string, updateCarDto: UpdateCarDto) {
+
+        // obtenemos el Car original a modificar
+        let carBD = this.findOneById(id);
+
+        // si encuentra, lo pasamos por el MAP para transformar el objeto
+        this.cars = this.cars.map( car => {
+
+            // validamos que el id recibido exista
+            if (car.id === id) {
+                
+                // sobreescribimos el Car original por lo recibido
+                carBD = {
+                    ...carBD,
+                    ...updateCarDto, id
+                }
+
+                // retornamos el Car actualizado
+                return carBD;
+            }
+
+            // si el id no es igual retornamos el Car como original
+            return car;
+        });
+
+        // retornamos el Car (actualizado o no)
+        return carBD;
+    }
+
+    // método para eliminar un Car
+    public delete(id: string) {
+
+        // obtenemos el Car original a modificar
+        const car = this.findOneById(id);
+
+        // eliminamos el Car
+        this.cars = this.cars.filter(car => car.id !== id);
     }
 }
