@@ -5,30 +5,12 @@ import { Car } from './interfaces/car.interface';
 import { v4 as uuid } from "uuid";
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
-import { Delete } from '@nestjs/common/decorators';
 
 @Injectable()
 export class CarsService {
 
-    // defino una propiedad arreglo de Cars del tipo Car (definida en las interfaces)
-    // los id se trabajan con UUID
-    private cars: Car[] = [
-        {
-            id: uuid(),
-            brand: 'Toyota',
-            model: 'Corolla'
-        },
-        {
-            id: uuid(),
-            brand: 'Honda',
-            model: 'Fit'
-        },
-        {
-            id: uuid(),
-            brand: 'Suzuki',
-            model: 'Swift'
-        },
-    ];
+    // defino una propiedad arreglo de Cars del tipo Car (definida en la interfaz, que se llenará con la Seed)
+    private cars: Car[] = [];
 
     // método para obtener todos los Cars
     public findAll() {
@@ -54,6 +36,7 @@ export class CarsService {
         
         // creamos una constante con la data del nuevo Car
         const car: Car = {
+
             id: uuid(),
             model: createCarDto.brand,
             brand: createCarDto.model
@@ -98,10 +81,13 @@ export class CarsService {
     // método para eliminar un Car
     public delete(id: string) {
 
-        // obtenemos el Car original a modificar
-        const car = this.findOneById(id);
-
         // eliminamos el Car
         this.cars = this.cars.filter(car => car.id !== id);
+    }
+
+    // método para llenar la BD simulada definida en los Seed 
+    fillCarsWithSeedData(cars: Car[]) {
+
+        this.cars = cars;
     }
 }

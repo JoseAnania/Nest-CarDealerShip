@@ -10,11 +10,8 @@ import { UpdateCarDto } from './dto/update-car.dto';
 
 export class CarsController {
 
-    constructor(
-
-        // realizamos la inyección de dependencias para poder usar la lógica del servicio
-        private readonly carsService: CarsService
-    ) {}
+    // realizamos la inyección de dependencias para poder usar la lógica del servicio
+    constructor(private readonly carsService: CarsService) {}
 
     // método para obtener todos los Cars
     @Get()
